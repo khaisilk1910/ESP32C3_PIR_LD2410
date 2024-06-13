@@ -6,8 +6,6 @@ Step 1: Measure the distance from the sensor to where you want zone 1 to end. Al
 
 Step 2: In Home Assistant go to the sensors configuration page and scroll down until you find the configurations you see below.
 
-ld2410c zones distance
-
 Step 3: In the Radar End Zone 1 box type in the measurement you made for zone 1. This is in centimeters so if you measured in inches convert the measurement first.
 
 Step 4: Repeat step 3 for zone 2 and zone 3.
