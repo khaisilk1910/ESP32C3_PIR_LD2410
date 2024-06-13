@@ -1,0 +1,355 @@
+substitutions:
+  name: presence-pir-nvs-t1-ld2410c
+  friendly_name: Presence Pir C3Mini NVS T1 LD2410C
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: '1.0'
+  on_boot:
+    priority: 900
+    then:
+       lambda: |-
+        id(cpu_speed) = ESP.getCpuFreqMHz() ;
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+
+# Allow provisioning Wi-Fi via serial
+improv_serial:
+
+wifi:
+  # Set up a wifi access point
+  ap: {}
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://esphome/firmware/esphome-web/esp32c3.yaml@v2
+  import_full_config: true
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# To have a "next url" for improv serial
+web_server:
+  port: 80
+
+uart:
+  id: ld2410_uart
+  tx_pin: 21
+  rx_pin: 20
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+ld2410:
+  uart_id: ld2410_uart
+
+number:
+  - platform: ld2410
+    timeout:
+      name: Timeout
+    light_threshold:
+      name: Light Threshold
+    max_move_distance_gate:
+      name: Max Move Distance Gate
+    max_still_distance_gate:
+      name: Max Still Distance Gate
+    g0:
+      move_threshold:
+        name: g0 move threshold
+      still_threshold:
+        name: g0 still threshold
+    g1:
+      move_threshold:
+        name: g1 move threshold
+      still_threshold:
+        name: g1 still threshold
+    g2:
+      move_threshold:
+        name: g2 move threshold
+      still_threshold:
+        name: g2 still threshold
+    g3:
+      move_threshold:
+        name: g3 move threshold
+      still_threshold:
+        name: g3 still threshold
+    g4:
+      move_threshold:
+        name: g4 move threshold
+      still_threshold:
+        name: g4 still threshold
+    g5:
+      move_threshold:
+        name: g5 move threshold
+      still_threshold:
+        name: g5 still threshold
+    g6:
+      move_threshold:
+        name: g6 move threshold
+      still_threshold:
+        name: g6 still threshold
+    g7:
+      move_threshold:
+        name: g7 move threshold
+      still_threshold:
+        name: g7 still threshold
+    g8:
+      move_threshold:
+        name: g8 move threshold
+      still_threshold:
+        name: g8 still threshold
+
+  # Setting ending of zone 1 occupancy
+  - platform: template
+    name: "Radar End Zone 1"
+    id: radar_z1_end
+    device_class: distance
+    min_value: 0
+    max_value: 600
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 10
+    icon: "mdi:arrow-collapse-right"
+    entity_category: CONFIG
+
+  # Setting ending of zone 2 occupancy
+  - platform: template
+    name: "Radar End Zone 2"
+    id: radar_z2_end
+    device_class: distance
+    min_value: 0
+    max_value: 600
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 36
+    icon: "mdi:arrow-collapse-right"
+    entity_category: CONFIG
+
+  # Setting ending of zone 3 occupancy
+  - platform: template
+    name: "Radar End Zone 3"
+    id: radar_z3_end
+    device_class: distance
+    min_value: 0
+    max_value: 600
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 100
+    icon: "mdi:arrow-collapse-right"
+    entity_category: CONFIG
+
+select:
+  - platform: ld2410
+    distance_resolution:
+      name: Distance Resolution
+    baud_rate:
+      name: Baud Rate
+    light_function:
+      name: Light Function
+    out_pin_level:
+      name: Out Pin Level
+
+globals:
+   - id: cpu_speed
+     type: int
+     restore_value: no
+     initial_value: '0'
+sensor:
+  - platform: ld2410
+    light:
+      name: Light
+    moving_distance:
+      name : Moving Distance
+      id: moving_distance
+    still_distance:
+      name: Still Distance
+      id: still_distance
+    moving_energy:
+      name: Move Energy
+    still_energy:
+      name: Still Energy
+    detection_distance:
+      name: Detection Distance
+      id: radar_detection_distance
+    g0:
+      move_energy:
+        name: g0 move energy
+      still_energy:
+        name: g0 still energy
+    g1:
+      move_energy:
+        name: g1 move energy
+      still_energy:
+        name: g1 still energy
+    g2:
+      move_energy:
+        name: g2 move energy
+      still_energy:
+        name: g2 still energy
+    g3:
+      move_energy:
+        name: g3 move energy
+      still_energy:
+        name: g3 still energy
+    g4:
+      move_energy:
+        name: g4 move energy
+      still_energy:
+        name: g4 still energy
+    g5:
+      move_energy:
+        name: g5 move energy
+      still_energy:
+        name: g5 still energy
+    g6:
+      move_energy:
+        name: g6 move energy
+      still_energy:
+        name: g6 still energy
+    g7:
+      move_energy:
+        name: g7 move energy
+      still_energy:
+        name: g7 still energy
+    g8:
+      move_energy:
+        name: g8 move energy
+      still_energy:
+        name: g8 still energy
+  - platform: template
+    name: "ESP Cpu Speed"
+    accuracy_decimals: 0
+    unit_of_measurement: Mhz
+    lambda: |-
+      return (id(cpu_speed));
+    entity_category: "diagnostic"
+  - platform: template
+    id: sys_esp_temperature
+    name: ESP Temperature
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
+    update_interval: 5s
+    entity_category: "diagnostic"
+  - platform: uptime
+    name: Uptime
+    id: sys_uptime
+    update_interval: 10s
+  - platform: wifi_signal 
+    name: RSSI
+    id: wifi_signal_db
+    update_interval: 5s
+    entity_category: "diagnostic"
+  - platform: template
+    id: esp_memory
+    icon: mdi:memory
+    name: ESP Free Memory
+    lambda: return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024;
+    unit_of_measurement: 'kB'
+    state_class: measurement
+    entity_category: "diagnostic"
+
+binary_sensor:
+  - platform: status
+    name: Online
+    id: ink_ha_connected
+  - platform: ld2410
+    has_target:
+      name: Presence
+      id: radar_has_target
+    has_moving_target:
+      name: Moving Target
+    has_still_target:
+      name: Still Target
+    out_pin_presence_status:
+      name: Out Pin Presence Status
+  - platform: gpio
+    pin: 4
+    name: "PIR NVST1 Sensor"
+    device_class: motion
+  ## Set Up Radar Zones Based On Distance
+  - platform: template
+    name: "Radar Zone 1 Occupancy"
+    device_class: occupancy
+    icon: mdi:motion-sensor
+    lambda: |-
+      if ((id(radar_has_target).state) && (id(radar_detection_distance).state < id(radar_z1_end).state)) {
+        return true;
+      } else {
+        return false;
+      }
+  - platform: template
+    name: "Radar Zone 2 Occupancy"
+    device_class: occupancy
+    icon: mdi:motion-sensor
+    lambda: |-
+      if ((id(radar_has_target).state) && ((id(radar_z1_end).state < id(radar_detection_distance).state) && (id(radar_detection_distance).state < id(radar_z2_end).state))) {
+        return true;
+      } else {
+        return false;
+      }
+  - platform: template
+    name: "Radar Zone 3 Occupancy"
+    device_class: occupancy
+    icon: mdi:motion-sensor
+    lambda: |-
+      if ((id(radar_has_target).state) && ((id(radar_z2_end).state < id(radar_detection_distance).state) && (id(radar_detection_distance).state < id(radar_z3_end).state))) {
+        return true;
+      } else {
+        return false;
+      }
+
+switch:
+  - platform: ld2410
+    engineering_mode:
+      name: Engineering Mode
+    bluetooth:
+      name: Control Bluetooth
+
+button:
+  - platform: ld2410
+    factory_reset:
+      name: Factory Reset
+    restart:
+      name: Restart
+    query_params:
+      name: Query Params
+
+text_sensor:
+  - platform: ld2410
+    version:
+      name: "Radar Firmware Version"
+
+time:
+  - platform: sntp
+    id: time_sntp
